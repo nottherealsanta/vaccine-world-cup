@@ -254,9 +254,49 @@ def get_title_info():
         <a target="_blank" href="https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&time=40..latest&pickerSort=desc&pickerMetric=total_vaccinations_per_hundred&Metric=People+vaccinated&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=OWID_WRL~IND~Africa~European+Union~USA~South+America">
         <img 
         src="data/OurWorldinData-logo.png" 
-        height="2%"
-        >
+        height="2%">
+        <p
+        style="
+                color:#ffffff;
+                text-shadow: 0px 0px black;
+                font-size: 10px;
+                margin-top : 0px;  
+                font-family: 'Open Sans', sans-serif; "> 
+            click to explore more
+        </p>
+
+        <p
+        style="
+                color:#ffffff;
+                text-shadow: 0px 0px black;
+                font-size: 18px;
+                position: relative;
+                margin-top : 20%;  
+                font-family: 'Raleway', sans-serif; "> 
+        </p>
+        <img 
+        src="data/scroll-down.png" 
+        height="0.5%">
         </a>
+        
+
+        <div
+            style="
+                height: 3%;width: 20%; right:0; bottom:0;
+                background-color:rgba(0, 0, 0, 0.1);
+                position:fixed;
+                text-align: right;">
+            <p
+            style="
+                    color:#ffffff;
+                    text-shadow: 0px 0px black;
+                    font-size: 15px;
+                    bottom : 0px;
+                    font-family: 'Open Sans', sans-serif; "> 
+                last updated : 5th April 2021
+            </p>
+        </div>
+
         </div>
         '''.format()
 
