@@ -12,7 +12,7 @@ draw_text_finish_line_list = ["World"]
 location_list = ['India', 'United States','European Union', 'Africa','South America', 'China','World']
 color_list = ['#FF9933', '#2D89FF' ,'#0055FF','#00c918','#f8ff33',"#DE2910",'#cccccc']
 
-font_str = '''font-family: 'Open Sans', sans-serif; font-weight: 700;'''
+font_str = '''font-family: 'Open Sans', sans-serif;'''
 
 # vaccination data
 vac_df = pd.read_csv('/Users/santa/Projects/vaccine-world-cup/data/data.csv').drop(0)
@@ -217,6 +217,49 @@ def background():
     <rect fill="url(#gradient-fill)" width="200" height="800"/>
     '''
 
+def get_title_info():
+    return '''
+        <div 
+            style="
+                height: 375%;width: 100%;
+                background-color:rgba(0, 0, 0, 0.01);
+                position:relative;
+                top:25%;
+                text-align: center;">
+        <h1 
+            style="
+                color:white;
+                text-shadow: 3px 3px black;
+                font-size: 100px;  
+                font-family: 'Raleway', sans-serif;"> 
+            Vaccine World Cup
+        
+        <sub 
+            style="
+                color:#ff4444;
+                text-shadow: 0px 0px black;
+                font-size: 20px;  
+                font-family: 'Open Sans', sans-serif; "> 
+            COVID-19
+        </sub></h1>
+
+        <p
+        style="
+                color:#ffffff;
+                text-shadow: 0px 0px black;
+                font-size: 15px;  
+                font-family: 'Open Sans', sans-serif; "> 
+            powered by
+        </p>
+        <a target="_blank" href="https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&time=40..latest&pickerSort=desc&pickerMetric=total_vaccinations_per_hundred&Metric=People+vaccinated&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=OWID_WRL~IND~Africa~European+Union~USA~South+America">
+        <img 
+        src="data/OurWorldinData-logo.png" 
+        height="2%"
+        >
+        </a>
+        </div>
+        '''.format()
+
 # main html string
 
 html_string = '''
@@ -224,7 +267,7 @@ html_string = '''
 <head>
     <title>Vaccine World Cup</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&family=Raleway:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Raleway:wght@400&display=swap" rel="stylesheet">
 </head>
 <body style="width:100%;height:100%;margin:0;">
 <div style="height: 400%; width: 100%; border:2px solid #000;  position: absolute;" >
@@ -234,25 +277,7 @@ html_string = '''
         {group_location}
     </svg>
 </div>
-
-
-<div 
-    style="
-        height: 70%;width: 100%;
-        top:15%;padding-top:2%;
-        background-color:rgba(0, 0, 0, 0.01);
-        position:relative;
-        text-align: center;">
-<h1 
-    style="
-        color:white;
-        text-shadow: 3px 3px black;
-        font-size: 100px;  
-        font-family: 'Raleway', sans-serif;"> 
-        Vaccine World Cup</h1>
-</div>
-
-
+{title_info}
 </body>
 </html>
 '''.format(
@@ -264,7 +289,10 @@ html_string = '''
 
     grid_pattern = grid_pattern(),
 
-    background = background()
+    background = background(),
+
+    title_info = get_title_info()
+
     )
 
 
