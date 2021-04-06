@@ -12,7 +12,7 @@ draw_text_finish_line_list = ["World"]
 location_list = ['India', 'United States','European Union', 'Africa','South America', 'China','World']
 color_list = ['#FF9933', '#2D89FF' ,'#0055FF','#00c918','#f8ff33',"#DE2910",'#cccccc']
 
-font_str = '''font-family: 'Helvetica', 'Arial', sans-serif; font-weight: 500;'''
+font_str = '''font-family: 'Open Sans', sans-serif; font-weight: 700;'''
 
 # vaccination data
 vac_df = pd.read_csv('/Users/santa/Projects/vaccine-world-cup/data/data.csv').drop(0)
@@ -87,7 +87,7 @@ def get_graph_for_location( location, color='black', hor_scale=1.2, ver_scale=1)
         <text x="375" y="{value}" 
             style="{font_str}"
             text-anchor="end" 
-            font-size="5" 
+            font-size="4" 
             transform="scale (0.5,1)" 
             fill="white">
             World Finish Line
@@ -199,17 +199,6 @@ def grid_pattern():
 
     return ret_string + grid_tick_y
 
-def static_text():
-    return '''
-    <text 
-        x="1" y="790" 
-        fill="#aaa" 
-        style="{font_str}" 
-        text-anchor="start" font-size="2" 
-        transform="scale (0.5,1)">
-        First Vaccination: 13th December 2020</text>
-    '''.format(font_str=font_str)
-
 def background():
     return '''
         <defs xmlns="http://www.w3.org/2000/svg">
@@ -233,8 +222,9 @@ def background():
 html_string = '''
 <html style="width:100%;height:100%;">
 <head>
-    <title>nottherealsanta</title>
-    <link href='https://fonts.googleapis.com/css?family=IBM+Plex+Sans' rel='stylesheet' type='text/css'>
+    <title>Vaccine World Cup</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&family=Raleway:wght@400&display=swap" rel="stylesheet">
 </head>
 <body style="width:100%;height:100%;margin:0;">
 <div style="height: 400%; width: 100%; border:2px solid #000;  position: absolute;" >
@@ -242,9 +232,26 @@ html_string = '''
         {background}
         {grid_pattern}
         {group_location}
-        {static_text}
     </svg>
 </div>
+
+
+<div 
+    style="
+        height: 70%;width: 100%;
+        top:15%;padding-top:2%;
+        background-color:rgba(0, 0, 0, 0.01);
+        position:relative;
+        text-align: center;">
+<h1 
+    style="
+        color:white;
+        text-shadow: 3px 3px black;
+        font-size: 100px;  
+        font-family: 'Raleway', sans-serif;"> 
+        Vaccine World Cup</h1>
+</div>
+
 
 </body>
 </html>
@@ -257,10 +264,7 @@ html_string = '''
 
     grid_pattern = grid_pattern(),
 
-    background = background(),
-    
-    static_text= static_text()
-
+    background = background()
     )
 
 
@@ -268,10 +272,3 @@ f = open('/Users/santa/Projects/vaccine-world-cup/index.html','w')
 f.write(html_string)
 f.close()
 
-# <!--
-# <div style="height: 70%;width: 35%;top:15%;left:3%;padding-top:2%;background-color: #222;position:relative;
-#   text-align: center;opacity: 0.5;  border: 5px solid black;">
-# <h1 style="color:white;text-shadow: 3px 3px black;font-size: 50px;  font-family: 'Lucida Console', Monaco, monospace;">  Vaine World Cup</h1>
-# <hr>
-# </div>
-# -->
