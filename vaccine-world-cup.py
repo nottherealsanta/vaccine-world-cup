@@ -9,10 +9,10 @@ WIDTH = 200
 dont_draw_list = ['China']
 draw_text_finish_line_list = ["World"]
 
-location_list = ['World','India', 'United States','European Union', 'Africa','South America', 'China']
-color_list = ['#cccccc','#FF9933', '#2D89FF' ,'#0055FF','#00c918','#f8ff33',"#DE2910"]
+location_list = ['India', 'United States','European Union', 'Africa','South America', 'China','World']
+color_list = ['#FF9933', '#2D89FF' ,'#0055FF','#00c918','#f8ff33',"#DE2910",'#cccccc']
 
-font_str = '''font-family: 'Helvetica', 'Arial', sans-serif;'''
+font_str = '''font-family: 'Helvetica', 'Arial', sans-serif; font-weight: 500;'''
 
 # vaccination data
 vac_df = pd.read_csv('/Users/santa/Projects/vaccine-world-cup/data/data.csv').drop(0)
@@ -135,24 +135,25 @@ def get_text_for_location(location, color, loc_x, loc_y):
     return text_svg
 
 def group_location (locations = [], colors = []):
+
     ret_string = ""
     text_loc_df = pd.DataFrame(columns=['location','x','y'])
+    
+    #graphs
     for l, c in zip(locations, colors):
         r, x, y = (get_graph_for_location(location=l, color=c))
         ret_string += r
         text_loc_df = text_loc_df.append({'location':l,'x':x, 'y':y}, ignore_index=True)
 
-    # adjusting names not to overlap
+    # adjusting texts not to overlap
     tolerance = 4
     text_loc_df = text_loc_df[~text_loc_df.location.isin(dont_draw_list)].sort_values('y',ascending=False).reset_index(drop=True)
-    print(text_loc_df)
     for index,row  in text_loc_df.iloc[1:].iterrows():
         prow_y = text_loc_df.iloc[index-1].y
-        print(row.y, prow_y, prow_y-row.y<tolerance)
         if prow_y-row.y < tolerance:
             text_loc_df.at[index,'y'] = prow_y-tolerance
-    print(text_loc_df)
-
+    
+    #texts
     for l,c in zip(locations, colors):
         r = get_text_for_location(
             l, c, 
@@ -189,7 +190,7 @@ def grid_pattern():
 
     grid_tick_y = ""
     for i in range(5, 80,5):
-        grid_tick_y += ''' <text x="13" y="{y}" >{pop:.1f}B</text>'''.format(pop=i/10, y= 800-(i*10))
+        grid_tick_y += ''' <text x="15" y="{y}" >{pop:.1f}B</text>'''.format(pop=i/10, y= 800-(i*10))
     grid_tick_y = '''
     <g fill="#aaa" style="{font_str}"text-anchor="start" font-size="2.5" transform="scale (0.5,1)" >
         {tick}
@@ -197,6 +198,17 @@ def grid_pattern():
     '''.format(tick=grid_tick_y, font_str=font_str)
 
     return ret_string + grid_tick_y
+
+def static_text():
+    return '''
+    <text 
+        x="1" y="790" 
+        fill="#aaa" 
+        style="{font_str}" 
+        text-anchor="start" font-size="2" 
+        transform="scale (0.5,1)">
+        First Vaccination: 13th December 2020</text>
+    '''.format(font_str=font_str)
 
 def background():
     return '''
@@ -230,14 +242,9 @@ html_string = '''
         {background}
         {grid_pattern}
         {group_location}
+        {static_text}
     </svg>
 </div>
-
-<!--<div style="height: 70%;width: 35%;top:15%;left:3%;padding-top:2%;background-color: #222;position:relative;
-  text-align: center;opacity: 0.5;  border: 5px solid black;">
-<h1 style="color:white;text-shadow: 3px 3px black;font-size: 50px;  font-family: 'Lucida Console', Monaco, monospace;">  Vaine World Cup</h1>
-<hr>
-</div>-->
 
 </body>
 </html>
@@ -250,11 +257,21 @@ html_string = '''
 
     grid_pattern = grid_pattern(),
 
-    background = background()
+    background = background(),
     
+    static_text= static_text()
+
     )
 
 
 f = open('/Users/santa/Projects/vaccine-world-cup/index.html','w')
 f.write(html_string)
 f.close()
+
+# <!--
+# <div style="height: 70%;width: 35%;top:15%;left:3%;padding-top:2%;background-color: #222;position:relative;
+#   text-align: center;opacity: 0.5;  border: 5px solid black;">
+# <h1 style="color:white;text-shadow: 3px 3px black;font-size: 50px;  font-family: 'Lucida Console', Monaco, monospace;">  Vaine World Cup</h1>
+# <hr>
+# </div>
+# -->
