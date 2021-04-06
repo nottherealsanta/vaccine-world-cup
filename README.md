@@ -1,4 +1,4 @@
 # vaccine-world-cup
 
 
-visit :   https://nottherealsanta.github.io/vaccine-world-cup/
+visit :   www.vaccineworldcup.com
