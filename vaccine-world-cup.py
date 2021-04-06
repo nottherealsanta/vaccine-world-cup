@@ -1,0 +1,260 @@
+import pandas as pd
+import numpy as np
+
+# CONFIG
+
+HEIGHT = 800
+WIDTH = 200
+
+dont_draw_list = ['China']
+draw_text_finish_line_list = ["World"]
+
+location_list = ['World','India', 'United States','European Union', 'Africa','South America', 'China']
+color_list = ['#cccccc','#FF9933', '#2D89FF' ,'#0055FF','#00c918','#f8ff33',"#DE2910"]
+
+font_str = '''font-family: 'Helvetica', 'Arial', sans-serif;'''
+
+# vaccination data
+vac_df = pd.read_csv('/Users/santa/Projects/vaccine-world-cup/data/data.csv').drop(0)
+vac_df.total_vaccinations = pd.to_numeric(vac_df.total_vaccinations)
+vac_df.date = pd.to_datetime(vac_df.date)
+
+# population data
+pop_df = pd.read_csv('/Users/santa/Projects/vaccine-world-cup/data/pop_data.csv')
+
+# combine df
+df = vac_df[['location','date','iso_code','people_vaccinated','people_vaccinated_per_hundred']].merge(pop_df[['iso_code','population']], on=['iso_code'], how='inner')
+
+# Function
+def get_graph_for_location( location, color='black', hor_scale=1.2, ver_scale=1): 
+
+    # graphs
+
+    format_df = df[df.location=='World'].sort_values('date').reset_index()['date'].to_frame()
+    location_df = df[df.location==location].set_index('date').people_vaccinated.fillna(method='bfill').to_frame().reset_index()
+    m_df = format_df.merge(location_df, on=['date'], how='left').fillna(0)
+
+    vacc_list = [ HEIGHT-(i * ver_scale) for i in ((m_df.people_vaccinated/10000000).values.tolist())]
+    ran_list = [ (i * hor_scale) for i in  list(range(0, len(vacc_list)))]
+    path_string = ""
+    for i,j in zip(ran_list, vacc_list) :
+        path_string += "L "
+        path_string += (str(i)+" ")
+        path_string += (str(j)+" ")
+
+    d_string_area = 'M 0 '+str(HEIGHT)+ path_string + 'L '+str(ran_list[-1])+' '+str(HEIGHT)+' z'
+    d_string_line = 'M 0 '+str(HEIGHT)+ path_string + ' '
+    
+    area_svg = "<path fill=\"{1}\" stroke-width=0.5 opacity=0.1 d=\"{0}\"/>".format(d_string_area, color)
+    line_svg = "<path fill=\"none\" stroke-width=0.5 stroke=\"{1}\" d=\"{0}\"/>".format(d_string_line, color)
+
+    loc_x = ran_list[-1]*2
+    loc_y = vacc_list[-1]
+
+    # circle 
+    circle_svg = '''
+        <circle 
+            cx="{x}" 
+            cy="{y}" 
+            r="1" stroke="{color}" 
+            stroke-width="0.5" 
+            fill="none" 
+            transform="scale (0.5,1)"/>
+        <circle 
+            cx="{x}" 
+            cy="{y}" 
+            r="0.5" stroke="none" 
+            stroke-width="0.5" 
+            fill="{color}" 
+            transform="scale (0.5,1)"/>
+    '''.format(x=loc_x , y=loc_y, color=color)
+
+    # finish line
+    finish_line_loc = HEIGHT - df[df.location==location].population.values[0]/10000000
+    finish_line_svg = '''
+    <path 
+        fill="none" stroke="{color}" 
+        stroke-width="0.25" 
+        stroke-dasharray="1,1" 
+        d="M0 {value} l200 0">
+    </path>'''.format( 
+        value =  finish_line_loc,
+        color = color)
+
+    # draw text on finish line : "World"
+    if location in draw_text_finish_line_list:
+        finish_line_svg +='''
+        <text x="375" y="{value}" 
+            style="{font_str}"
+            text-anchor="end" 
+            font-size="5" 
+            transform="scale (0.5,1)" 
+            fill="white">
+            World Finish Line
+        </text>'''.format(
+            value=finish_line_loc-1,
+            font_str=font_str)
+
+    # don't draw graphs for china
+    if location in dont_draw_list:
+        ret_string = "\t {}".format(finish_line_svg)
+    else :
+        # ret_string =  "\t {0}\n\t {1}\n\t {2}\n\t {3}".format(area_svg, line_svg,text_svg, finish_line_svg)
+        ret_string = "\n\t".join([area_svg, line_svg, finish_line_svg, circle_svg])
+
+    return ret_string, loc_x, loc_y
+
+def get_text_for_location(location, color, loc_x, loc_y):
+
+    text_svg = '''
+    <text 
+        x="{x}" y="{y}" 
+        style="{font_str}"
+        text-anchor="start" 
+        font-size="3.5" 
+        transform="scale (0.5,1)" 
+        fill="{color}">
+        &nbsp;{location}
+            <tspan
+                style="{font_str}"
+                text-anchor="start" 
+                font-size="2.5" 
+                transform="scale (0.5,1)" 
+                fill="#eee">
+                {percent_vac:.1f}%
+            </tspan>
+    </text>'''.format(
+        x=loc_x,
+        y=loc_y,
+        location=location,
+        color=color,
+        percent_vac=df[df.location==location].people_vaccinated_per_hundred.max(),
+        font_str=font_str
+    )
+
+    return text_svg
+
+def group_location (locations = [], colors = []):
+    ret_string = ""
+    text_loc_df = pd.DataFrame(columns=['location','x','y'])
+    for l, c in zip(locations, colors):
+        r, x, y = (get_graph_for_location(location=l, color=c))
+        ret_string += r
+        text_loc_df = text_loc_df.append({'location':l,'x':x, 'y':y}, ignore_index=True)
+
+    # adjusting names not to overlap
+    tolerance = 4
+    text_loc_df = text_loc_df[~text_loc_df.location.isin(dont_draw_list)].sort_values('y',ascending=False).reset_index(drop=True)
+    print(text_loc_df)
+    for index,row  in text_loc_df.iloc[1:].iterrows():
+        prow_y = text_loc_df.iloc[index-1].y
+        print(row.y, prow_y, prow_y-row.y<tolerance)
+        if prow_y-row.y < tolerance:
+            text_loc_df.at[index,'y'] = prow_y-tolerance
+    print(text_loc_df)
+
+    for l,c in zip(locations, colors):
+        r = get_text_for_location(
+            l, c, 
+            text_loc_df[text_loc_df.location==l].x + 5, 
+            text_loc_df[text_loc_df.location==l].y )
+        ret_string+= r
+
+    return ret_string
+
+def grid_pattern():
+
+    ret_string = '''
+        <defs>
+            <pattern 
+                id="pattern1" 
+                patternUnits="userSpaceOnUse" 
+                x="0" y="0" width="10" height="10" 
+                viewBox="0 0 4 4">
+                <path 
+                    d="M 0 0 L 0 4 L 4 4 L 4 0 Z" 
+                    fill="none" 
+                    stroke-width="0.05" 
+                    stroke="#575757"></path>
+            </pattern>
+  
+        </defs>
+        <g>
+            <rect x="0" y="0" 
+                  width="100%" 
+                  height="100%" 
+                  fill="url(#pattern1)" />
+        </g>
+    '''
+
+    grid_tick_y = ""
+    for i in range(5, 80,5):
+        grid_tick_y += ''' <text x="13" y="{y}" >{pop:.1f}B</text>'''.format(pop=i/10, y= 800-(i*10))
+    grid_tick_y = '''
+    <g fill="#aaa" style="{font_str}"text-anchor="start" font-size="2.5" transform="scale (0.5,1)" >
+        {tick}
+    </g>
+    '''.format(tick=grid_tick_y, font_str=font_str)
+
+    return ret_string + grid_tick_y
+
+def background():
+    return '''
+        <defs xmlns="http://www.w3.org/2000/svg">
+					<linearGradient xmlns="http://www.w3.org/2000/svg" id="gradient-fill" x1="0" y1="0" x2="800" y2="0" gradientUnits="userSpaceOnUse">				
+							<stop offset="0" stop-color="#060d20"/>
+                            <stop offset="0.14285714285714285" stop-color="#091228"/>
+                            <stop offset="0.2857142857142857" stop-color="#091630"/>
+                            <stop offset="0.42857142857142855" stop-color="#091a38"/>
+                            <stop offset="0.5714285714285714" stop-color="#0a1d40"/>
+                            <stop offset="0.7142857142857142" stop-color="#0b2149"/>
+                            <stop offset="0.8571428571428571" stop-color="#0c2451"/>
+                            <stop offset="1" stop-color="#0e285a"/>
+					</linearGradient>
+				</defs>
+
+    <rect fill="url(#gradient-fill)" width="200" height="800"/>
+    '''
+
+# main html string
+
+html_string = '''
+<html style="width:100%;height:100%;">
+<head>
+    <title>nottherealsanta</title>
+    <link href='https://fonts.googleapis.com/css?family=IBM+Plex+Sans' rel='stylesheet' type='text/css'>
+</head>
+<body style="width:100%;height:100%;margin:0;">
+<div style="height: 400%; width: 100%; border:2px solid #000;  position: absolute;" >
+    <svg height="100%" width="100%" viewBox="0 0 200 800" position="absolute" preserveAspectRatio="none" >
+        {background}
+        {grid_pattern}
+        {group_location}
+    </svg>
+</div>
+
+<!--<div style="height: 70%;width: 35%;top:15%;left:3%;padding-top:2%;background-color: #222;position:relative;
+  text-align: center;opacity: 0.5;  border: 5px solid black;">
+<h1 style="color:white;text-shadow: 3px 3px black;font-size: 50px;  font-family: 'Lucida Console', Monaco, monospace;">  Vaine World Cup</h1>
+<hr>
+</div>-->
+
+</body>
+</html>
+'''.format(
+
+    group_location = group_location(
+    locations=location_list,
+    colors=color_list,
+    ),
+
+    grid_pattern = grid_pattern(),
+
+    background = background()
+    
+    )
+
+
+f = open('/Users/santa/Projects/vaccine-world-cup/index.html','w')
+f.write(html_string)
+f.close()
