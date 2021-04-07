@@ -273,6 +273,7 @@ def get_title_info():
                 position: relative;
                 margin-top : 20%;  
                 font-family: 'Raleway', sans-serif; "> 
+                
         </p>
         <img 
         src="data/scroll-down.png" 
@@ -308,6 +309,15 @@ html_string = '''
     <title>Vaccine World Cup</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Raleway:wght@400&display=swap" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NW9QW6H8S4"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NW9QW6H8S4');
+    </script>
 </head>
 <body style="width:100%;height:100%;margin:0;">
 <div style="height: 400%; width: 100%; border:2px solid #000;  position: absolute;" >
