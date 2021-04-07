@@ -242,13 +242,24 @@ def get_title_info():
                 color:#ffffff;
                 text-shadow: 0px 0px black;
                 font-size: 15px;  
+                margin-top : auto;
+                font-family: 'Open Sans', sans-serif; "> 
+            <b>last updated :</b> 7th April 2021
+        </p>
+
+        <p
+        style="
+                color:#ffffff;
+                text-shadow: 0px 0px black;
+                font-size: 15px;  
+                margin-bottom: auto;
                 font-family: 'Open Sans', sans-serif; "> 
             powered by
         </p>
         <a target="_blank" href="https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&time=40..latest&pickerSort=desc&pickerMetric=total_vaccinations_per_hundred&Metric=People+vaccinated&Interval=Cumulative&Relative+to+Population=false&Align+outbreaks=false&country=OWID_WRL~IND~Africa~European+Union~USA~South+America">
-        <img 
+        <img id="owidlogo"
         src="data/OurWorldinData-logo.png" 
-        height="2%">
+        >
         <p
         style="
                 color:#ffffff;
@@ -274,24 +285,6 @@ def get_title_info():
         height="0.5%">
         </a>
         
-
-        <div
-            style="
-                height: 3%;width: 20%; right:0; bottom:0;
-                background-color:rgba(0, 0, 0, 0.1);
-                position:fixed;
-                text-align: right;">
-            <p
-            style="
-                    color:#ffffff;
-                    text-shadow: 0px 0px black;
-                    font-size: 15px;
-                    bottom : 0px;
-                    font-family: 'Open Sans', sans-serif; "> 
-                last updated : 7th April 2021
-            </p>
-        </div>
-
         </div>
         '''.format()
 
@@ -328,21 +321,28 @@ html_string = '''
             top:25%;
             text-align: center;
         }}
+        #owidlogo{{
+            height: 1.5%
+        }}
 
         @media only screen and (max-width: 600px) {{
             #main {{
-                height: 400%; 
-                width: 400%;
+                height: 100%; 
+                width: 100%;
                 position : absolute;
             }}
             #titleinfo {{
-                height: 200%;
-                width: 200%;
-                background-color:rgba(0, 0, 0, 0.01);
+                height: 50%;
+                width: 100%;
+                background-color:rgba(0, 0, 0, 0.00);
                 position:relative;
-                top:25%;
+                top:5%;
                 text-align: center;
+                transform: scale(0.5);
             }}
+            #owidlogo{{
+            height:10%
+        }}
         }}
     
     </style>
