@@ -220,12 +220,7 @@ def background():
 def get_title_info():
     return '''
         <div id="titleinfo">
-        <h1 
-            style="
-                color:white;
-                text-shadow: 3px 3px black;
-                font-size: 100px;  
-                font-family: 'Raleway', sans-serif;"> 
+        <h1 id="heading1"> 
             Vaccine World Cup
         
         <sub 
@@ -252,7 +247,7 @@ def get_title_info():
                 color:#ffffff;
                 text-shadow: 0px 0px black;
                 font-size: 15px;  
-                margin-bottom: auto;
+                margin-bottom: 0.2%;
                 font-family: 'Open Sans', sans-serif; "> 
             powered by
         </p>
@@ -280,9 +275,9 @@ def get_title_info():
                 font-family: 'Raleway', sans-serif; "> 
                 
         </p>
-        <img 
-        src="data/scroll-down.png" 
-        height="0.5%">
+        <img id="scrollarrow"
+            src="data/scroll-down.png" 
+            height="0.5%">
         </a>
         
         </div>
@@ -325,6 +320,17 @@ html_string = '''
             height: 1.5%
         }}
 
+        #heading1{{
+            color:white;
+            text-shadow: 3px 3px black;
+            font-size: 100px;  
+            font-family: 'Raleway', sans-serif;
+        }}
+
+        #scrollarrow{{
+            height : 0.5%    
+        }}
+
         @media only screen and (max-width: 600px) {{
             #main {{
                 height: 100%; 
@@ -341,8 +347,18 @@ html_string = '''
                 transform: scale(0.5);
             }}
             #owidlogo{{
-            height:10%
-        }}
+                height:10%
+            }}
+            #heading1{{
+                color:white;
+                text-shadow: 3px 3px black;
+                font-size: 70px;  
+                font-family: 'Raleway', sans-serif;
+            }}
+
+            #scrollarrow{{
+                height : 0%    
+            }}
         }}
     
     </style>
