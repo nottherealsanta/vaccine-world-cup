@@ -336,7 +336,7 @@ html_string = '''
                 position : absolute;
             }}
             #titleinfo {{
-                height: 175%;
+                height: 200%;
                 width: 200%;
                 background-color:rgba(0, 0, 0, 0.01);
                 position:relative;
