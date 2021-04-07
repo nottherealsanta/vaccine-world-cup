@@ -219,13 +219,7 @@ def background():
 
 def get_title_info():
     return '''
-        <div 
-            style="
-                height: 375%;width: 100%;
-                background-color:rgba(0, 0, 0, 0.01);
-                position:relative;
-                top:25%;
-                text-align: center;">
+        <div id="titleinfo">
         <h1 
             style="
                 color:white;
@@ -294,7 +288,7 @@ def get_title_info():
                     font-size: 15px;
                     bottom : 0px;
                     font-family: 'Open Sans', sans-serif; "> 
-                last updated : 5th April 2021
+                last updated : 7th April 2021
             </p>
         </div>
 
@@ -303,10 +297,12 @@ def get_title_info():
 
 # main html string
 
+
 html_string = '''
 <html style="width:100%;height:100%;">
 <head>
     <title>Vaccine World Cup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500&family=Raleway:wght@400&display=swap" rel="stylesheet">
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -315,13 +311,46 @@ html_string = '''
     window.dataLayer = window.dataLayer || [];
     function gtag(){{dataLayer.push(arguments);}}
     gtag('js', new Date());
-
     gtag('config', 'G-NW9QW6H8S4');
     </script>
+
+    <style>
+        #main {{
+            height: 400%; 
+            width: 100%;
+            position: absolute;
+        }}
+        #titleinfo {{
+            height: 375%;
+            width: 100%;
+            background-color:rgba(0, 0, 0, 0.01);
+            position:relative;
+            top:25%;
+            text-align: center;
+        }}
+
+        @media only screen and (max-width: 600px) {{
+            #main {{
+                height: 400%; 
+                width: 400%;
+                position : absolute;
+            }}
+            #titleinfo {{
+                height: 175%;
+                width: 200%;
+                background-color:rgba(0, 0, 0, 0.01);
+                position:relative;
+                top:25%;
+                text-align: center;
+            }}
+        }}
+    
+    </style>
+
 </head>
 <body style="width:100%;height:100%;margin:0;">
-<div style="height: 400%; width: 100%; border:2px solid #000;  position: absolute;" >
-    <svg height="100%" width="100%" viewBox="0 0 200 800" position="absolute" preserveAspectRatio="none" >
+<div id="main">
+    <svg height="100%" width="100%" viewBox="0 0 200 800" position="relative" preserveAspectRatio="none" >
         {background}
         {grid_pattern}
         {group_location}
