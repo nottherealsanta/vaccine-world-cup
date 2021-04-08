@@ -239,7 +239,7 @@ def get_title_info():
                 font-size: 15px;  
                 margin-top : auto;
                 font-family: 'Open Sans', sans-serif; "> 
-            <b>last updated :</b> 7th April 2021
+            <b>last updated :</b> 8th April 2021
         </p>
 
         <p
