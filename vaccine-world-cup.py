@@ -218,6 +218,8 @@ def background():
     '''
 
 def get_title_info():
+
+    # print(df.date.max().strftime('''%dth %b %Y''').lstrip("0").replace(" 0", " "))
     return '''
         <div id="titleinfo">
         <h1 id="heading1"> 
@@ -239,7 +241,7 @@ def get_title_info():
                 font-size: 15px;  
                 margin-top : auto;
                 font-family: 'Open Sans', sans-serif; "> 
-            <b>last updated :</b> 8th April 2021
+            <b>last updated :</b> {}
         </p>
 
         <p
@@ -281,7 +283,7 @@ def get_title_info():
         </a>
         
         </div>
-        '''.format()
+        '''.format((df.date.max().strftime('''%dth %B %Y''').lstrip("0").replace(" 0", " ")))
 
 # main html string
 
