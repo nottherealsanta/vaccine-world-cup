@@ -15,12 +15,12 @@ color_list = ['#FF9933', '#2D89FF' ,'#0055FF','#00c918','#f8ff33',"#DE2910",'#cc
 font_str = '''font-family: 'Open Sans', sans-serif;'''
 
 # vaccination data
-vac_df = pd.read_csv('/Users/santa/Projects/vaccine-world-cup/data/data.csv').drop(0)
+vac_df = pd.read_csv('/Users/santa/Projects/_archive/vaccine-world-cup/data/data.csv').drop(0)
 vac_df.total_vaccinations = pd.to_numeric(vac_df.total_vaccinations)
 vac_df.date = pd.to_datetime(vac_df.date)
 
 # population data
-pop_df = pd.read_csv('/Users/santa/Projects/vaccine-world-cup/data/pop_data.csv')
+pop_df = pd.read_csv('/Users/santa/Projects/_archive/vaccine-world-cup/data/pop_data.csv')
 
 # combine df
 df = vac_df[['location','date','iso_code','people_vaccinated','people_vaccinated_per_hundred']].merge(pop_df[['iso_code','population']], on=['iso_code'], how='inner')
@@ -393,7 +393,7 @@ html_string = '''
     )
 
 
-f = open('/Users/santa/Projects/vaccine-world-cup/index.html','w')
+f = open('/Users/santa/Projects/_archive/vaccine-world-cup/index.html','w')
 f.write(html_string)
 f.close()
 
